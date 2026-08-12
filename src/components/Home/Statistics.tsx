@@ -26,9 +26,9 @@ export default function Statistics() {
 
         <div className=" relative z-10 flex flex-col items-center justify-center gap-4">
           <p className="text-pink-600 border-b border-pink-600 font-semibold">STATISTICS</p>
-          <h1 className="text-5xl text-black font-extrabold">Built for better forms</h1>
+          <h1 className=" text-center text-5xl text-black font-extrabold">Built for better forms</h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-10">
           {statistics.map((statistic, index)=>(
             <div key={index} className="flex flex-col items-center p-8 bg-linear-to-br from-pink-300/30 to-pink-500/50 rounded-2xl hover:scale-105 transform transition-transform duration-300 shadow-md hover:shadow-lg hover:shadow-pink-600/30">
               <h2 className="text-4xl text-pink-600 font-extrabold">{statistic.title}</h2>

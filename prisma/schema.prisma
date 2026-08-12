@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String   @unique
-  password  String
+  id       String  @id @default(cuid())
+  name     String?
+  email    String  @unique
+  password String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  forms     Form[]
+  forms Form[]
 }
 
 model Form {
@@ -25,8 +25,9 @@ model Form {
   description String?
   slug        String  @unique
   published   Boolean @default(false)
-  userId      String
-  user        User    @relation(fields: [userId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   questions   Question[]
   submissions Submission[]
@@ -35,27 +36,44 @@ model Form {
   updatedAt DateTime @updatedAt
 }
 
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  MULTIPLE_CHOICE
+  CHECKBOX
+  DROPDOWN
+  NUMBER
+  EMAIL
+  DATE
+}
+
 model Question {
   id String @id @default(cuid())
 
   formId String
-  form   Form   @relation(fields: [formId], references: [id])
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
 
-  type     String
+  type     QuestionType
   title    String
-  required Boolean @default(false)
-  order Int
+  required Boolean      @default(false)
+  order    Int
   options  Json?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([formId])
 }
 
-model Submission{
+model Submission {
   id String @id @default(cuid())
 
   formId String
-  form   Form   @relation(fields: [formId], references: [id])
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
 
-  answers   Json
+  answers Json
 
   createdAt DateTime @default(now())
+
+  @@index([formId])
 }

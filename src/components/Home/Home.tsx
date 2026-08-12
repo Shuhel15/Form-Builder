@@ -21,7 +21,7 @@ export default async function Home() {
           Build Forms.
           <br />
           <span
-            className={`${playfair.className} relative inline-block pb-2 text-pink-600`}
+            className={`${playfair.className} relative inline-block pb-2 text-pink-600 mt-2 mb-2`}
           >
             Collect Data.
             <svg
@@ -66,7 +66,7 @@ export default async function Home() {
       </div>
 
       <div className="pointer-events-none absolute -right-10  top-70 h-40 w-40 rounded-full bg-pink-400/30 blur-3xl" />
-      <div className="relative z-10 flex items-center justify-center">
+      <div className="relative z-10 mt-30 md:mt-0 flex items-center justify-center">
         <Image
           src="/hero1.png"
           alt="hero"

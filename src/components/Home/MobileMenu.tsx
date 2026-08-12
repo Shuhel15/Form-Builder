@@ -8,7 +8,7 @@ export default function MobileMenu({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="md:hidden">
+    <div className="md:hidden ">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="rounded-md p-2 text-zinc-600 hover:bg-pink-100"
