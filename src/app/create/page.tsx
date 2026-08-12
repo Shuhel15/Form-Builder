@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createForm } from "@/actions/form.actions";
 
 export default function CreateFormPage() {
   const router = useRouter();
@@ -14,22 +13,35 @@ export default function CreateFormPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setError("");
     setLoading(true);
+    try {
+      const response = await fetch("/api/forms", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description }),
+      });
 
-    const result = await createForm(title, description);
+      const data = await response.json();
 
-    if (!result.success) {
-      setError(result.error ?? "Something went wrong");
+      if (!response.ok) {
+        setError(data.error || "Something went wrong. Please try again later.");
+        setLoading(false);
+        return;
+      }
+
+      router.push(`/dashboard/forms/${data.formId}/edit`);
+      
+      setTitle("");
+      setDescription("");
       setLoading(false);
-      return;
-    }
 
-    router.push(`/dashboard/forms/${result.formId}/edit`);
-    setLoading(false);
-    setTitle("");
-    setDescription("");
+    } catch (error) {
+      console.error("Error creating form:", error);
+      setError("Something went wrong. Please try again later.");
+    }
   }
 
   return (
@@ -74,11 +86,7 @@ export default function CreateFormPage() {
           />
         </div>
 
-        {error && (
-          <p className="text-sm text-red-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
         <button
           type="submit"
