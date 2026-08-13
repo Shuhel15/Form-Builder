@@ -3,6 +3,11 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  Zap,
+  Link,
+  BarChart3,
+} from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +15,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,92 +38,231 @@ export default function Login() {
         return;
       }
 
-      setLoading(false);
-      setSuccess("Login successful !");
+      setSuccess("Login successful!");
 
       setTimeout(() => {
         router.push("/");
         router.refresh();
       }, 1000);
     } catch (error) {
-      setLoading(false);
-      setError("An unexpected error occurred. Please try again later.");
       console.error("Error while logging in user:", error);
+      setError("An unexpected error occurred. Please try again later.");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center py-10">
-      <div className="grid w-full max-w-6xl grid-cols-1 shadow-lg md:grid-cols-2">
-
-        {/* Left div */}
-        <div className="hidden flex-col gap-2 rounded-l-lg bg-white p-10 text-black md:flex">
-          <h1 className="text-2xl font-semibold">Form Builder</h1>
-
-          <p>• Build Forms in just one minute</p>
-          <p>• Share with anyone just a link</p>
-          <p>• See records in dashboard</p>
-        </div>
-
-        {/* Right div */}
-        <div className="flex min-h-137.5 w-full flex-col items-center justify-center rounded-lg bg-black py-10 text-white md:rounded-l-none md:rounded-r-lg">
-
-          <h1 className="py-2 text-2xl font-semibold">
-            Login Page
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <div
+        className="
+          w-full max-w-4xl
+          min-h-137.5
+          flex flex-col md:flex-row
+          bg-white
+          rounded-xl
+          shadow-lg
+          shadow-pink-300/30
+          overflow-hidden
+        "
+      >
+        {/* Left Div */}
+        <div
+          className="
+            hidden md:flex
+            md:w-[55%]
+            bg-white
+            text-black
+            flex-col
+            justify-center
+            px-12
+          "
+        >
+          <h1 className="text-4xl font-bold mb-4">
+            Welcome <span className="text-pink-600">Back.</span>
           </h1>
 
+          <p className="text-gray-600 mb-8 max-w-md leading-relaxed">
+            Manage your forms, collect responses, and keep everything
+            organized — all in one place.
+          </p>
+
+          <div className="space-y-6">
+            {/* Feature 1 */}
+            <div className="flex gap-4">
+              <div className="w-10 h-10 shrink-0 rounded-lg bg-pink-100 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-pink-600" />
+              </div>
+
+              <div>
+                <p className="font-semibold text-gray-800">
+                  Build forms in minutes
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Create professional forms without writing any code.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="flex gap-4">
+              <div className="w-10 h-10 shrink-0 rounded-lg bg-pink-100 flex items-center justify-center">
+                <Link className="w-5 h-5 text-pink-600" />
+              </div>
+
+              <div>
+                <p className="font-semibold text-gray-800">
+                  Share with anyone
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Share your form instantly with a simple link.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="flex gap-4">
+              <div className="w-10 h-10 shrink-0 rounded-lg bg-pink-100 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-pink-600" />
+              </div>
+
+              <div>
+                <p className="font-semibold text-gray-800">
+                  Track responses easily
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  View and manage all your responses from one dashboard.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Div */}
+        <div
+          className="
+            w-full md:w-[45%]
+            bg-black
+            text-white
+            flex flex-col
+            items-center
+            justify-center
+            px-6 py-10
+            sm:px-10
+            rounded-xl
+            md:rounded-l-none
+          "
+        >
+          <h1 className="text-xl sm:text-2xl font-semibold mb-2">
+            Welcome Back
+          </h1>
+
+          <p className="text-zinc-500 text-sm mb-6 text-center">
+            Login to continue to your account.
+          </p>
+
           {error && (
-            <p className="py-2 text-red-500">
+            <p className="text-red-500 text-sm mb-3 text-center">
               {error}
             </p>
           )}
 
           {success && (
-            <p className="py-2 text-green-500">
+            <p className="text-green-500 text-sm mb-3 text-center">
               {success}
             </p>
           )}
 
           <form
             onSubmit={handleSubmit}
-            className="flex w-full flex-col items-stretch justify-center gap-2 px-10 sm:w-[80%] md:w-[70%] lg:w-[60%]"
+            className="flex flex-col w-full max-w-sm gap-2"
           >
-            <label>Email:</label>
+            {/* Email */}
+            <label htmlFor="email" className="text-sm">
+              Email
+            </label>
 
             <input
               type="email"
+              id="email"
               name="email"
               value={email}
               placeholder="example@gmail.com"
               onChange={(e) => setEmail(e.target.value)}
-              className="rounded-md border border-zinc-800 p-2 text-white outline-none focus:border-white"
+              required
+              className="
+                w-full
+                bg-zinc-950
+                text-white
+                placeholder:text-zinc-600
+                border border-zinc-800
+                rounded-md
+                p-2.5
+                mb-2
+                text-sm
+                outline-none
+                focus:border-pink-600
+                transition
+              "
             />
 
-            <label>Password:</label>
+            {/* Password */}
+            <label htmlFor="password" className="text-sm">
+              Password
+            </label>
 
             <input
               type="password"
+              id="password"
               name="password"
               value={password}
-              placeholder="******"
+              placeholder="********"
               onChange={(e) => setPassword(e.target.value)}
-              className="mb-2 rounded-md border border-zinc-800 p-2 text-white outline-none focus:border-white"
+              required
+              className="
+                w-full
+                bg-zinc-950
+                text-white
+                placeholder:text-zinc-600
+                border border-zinc-800
+                rounded-md
+                p-2.5
+                mb-2
+                text-sm
+                outline-none
+                focus:border-pink-600
+                transition
+              "
             />
 
+            {/* Login Button */}
             <button
               type="submit"
               disabled={loading}
-              className="rounded-md bg-emerald-500 px-4 py-2 font-semibold text-white transition-transform duration-150 hover:bg-emerald-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+              className="
+                w-full
+                bg-pink-600
+                hover:bg-pink-700
+                disabled:opacity-60
+                disabled:cursor-not-allowed
+                font-semibold
+                text-white
+                rounded-md
+                p-2.5
+                mt-2
+                active:scale-95
+                transition-all
+              "
             >
               {loading ? "Logging in..." : "Login"}
             </button>
 
+            {/* Register */}
             <a
               href="/register"
-              className="mt-1 text-center text-xs text-zinc-500 sm:text-sm"
+              className="text-center text-xs sm:text-sm text-zinc-500 mt-3"
             >
               Don&apos;t have an account?{" "}
-              <span className="text-zinc-300 hover:underline">
+              <span className="text-zinc-300 hover:text-pink-500 hover:underline">
                 Register
               </span>
             </a>

@@ -72,7 +72,7 @@ export default async function Home() {
           alt="hero"
           width={800}
           height={800}
-          className="h-auto w-full max-w-200 rounded-xl shadow-xl shadow-pink-300/30 transition-all duration-300 hover:scale-105"
+          className="h-auto w-full max-w-200 rounded-xl shadow-xl shadow-pink-300/30 transition-all duration-300 hover:scale-105 active:scale-95"
         />
       </div>
     </div>
