@@ -44,7 +44,7 @@ export default async function Navbar() {
             >
               <button
                 type="submit"
-                className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-zinc-700 shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-500 hover:text-black"
+                className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
               >
                 Logout
                 <LogOut size={16} />
@@ -53,7 +53,7 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-zinc-700 shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-500 hover:text-black"
+              className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
             >
               Login
               <LogIn size={16} />

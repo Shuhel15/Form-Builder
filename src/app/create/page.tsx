@@ -33,11 +33,10 @@ export default function CreateFormPage() {
       }
 
       router.push(`/dashboard/forms/${data.formId}/edit`);
-      
+
       setTitle("");
       setDescription("");
       setLoading(false);
-
     } catch (error) {
       console.error("Error creating form:", error);
       setError("Something went wrong. Please try again later.");
