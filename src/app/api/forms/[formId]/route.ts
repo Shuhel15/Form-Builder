@@ -33,8 +33,14 @@ export async function PATCH( request: Request, { params }: RouteContext) {
     const body:unknown = await request.json();
     const result = updateFormSchema.safeParse(body);
 
-    if(!result.success){
-      return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid question data",
+          details: result.error.flatten(),
+        },
+        { status: 400 },
+      );
     }
 
     const { title, description } = result.data;

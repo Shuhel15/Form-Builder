@@ -19,8 +19,10 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   const [description, setDescription] = useState(form.description ?? "");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [isAddingQuestion, setIsAddingQuestion] = useState(false);
   const router = useRouter();
 
+  //For saving the edited form title and description
   async function handleSave() {
     setIsSaving(true);
     setError("");
@@ -46,6 +48,41 @@ export default function FormBuilder({ form }: FormBuilderProps) {
       setError("Failed to update form");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  //Adding questions
+  async function handleAddQuestion() {
+    setIsAddingQuestion(true);
+
+    try {
+      const response = await fetch(`/api/forms/${form.id}/questions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Untitled Question",
+          type: "SHORT_TEXT",
+          required: false,
+        }),
+      });
+
+    const data: {
+      message?: string;
+      error?: string;
+    } = await response.json();
+
+      if (!response.ok) {
+        console.error(data.error ?? "Failed to add question");
+        return;
+      }
+
+      router.refresh();
+    } catch (error) {
+      console.error("Add question error:", error);
+    } finally {
+      setIsAddingQuestion(false);
     }
   }
   return (
@@ -149,9 +186,11 @@ export default function FormBuilder({ form }: FormBuilderProps) {
 
           <button
             type="button"
-            className="rounded-lg bg-pink-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 "
+            onClick={handleAddQuestion}
+            disabled={isAddingQuestion}
+            className="rounded-lg bg-pink-600  px-2 md:px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 "
           >
-            + Add Question
+            {isAddingQuestion ? "Adding..." : "+ Add "}
           </button>
         </div>
 
