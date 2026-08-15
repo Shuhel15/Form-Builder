@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -22,6 +23,8 @@ const updateQuestionSchema = z.object({
   ]),
 
   required: z.boolean(),
+
+  options: z.array(z.string()).nullable(),
 });
 
 type RouteContext = {
@@ -30,18 +33,12 @@ type RouteContext = {
   }>;
 };
 
-export async function PATCH(
-  request: Request,
-  { params }: RouteContext,
-) {
+export async function PATCH(request: Request, { params }: RouteContext) {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { questionId } = await params;
@@ -60,7 +57,7 @@ export async function PATCH(
       );
     }
 
-    const { title, type, required } = result.data;
+    const { title, type, required, options } = result.data;
 
     const question = await prisma.question.findUnique({
       where: {
@@ -83,12 +80,8 @@ export async function PATCH(
       );
     }
 
-    // Check question's form owner
     if (question.form.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const updatedQuestion = await prisma.question.update({
@@ -99,6 +92,7 @@ export async function PATCH(
         title,
         type,
         required,
+        options: options ?? Prisma.JsonNull,
       },
     });
 
@@ -116,23 +110,21 @@ export async function PATCH(
   }
 }
 
-
 // deleting a question
-export async function DELETE(
-  request: Request,
-  {params}: RouteContext,
-){
-  try{
+export async function DELETE(request: Request, { params }: RouteContext) {
+  try {
     const session = await auth();
 
-    if(!session?.user?.id){
-      return NextResponse.json({
-        error:"Unauthorized"
-      },{status:401
-      })
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        { status: 401 },
+      );
     }
 
-    const {questionId} = await params;
+    const { questionId } = await params;
 
     const question = await prisma.question.findUnique({
       where: {
@@ -156,10 +148,7 @@ export async function DELETE(
     }
 
     if (question.form.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     await prisma.question.delete({

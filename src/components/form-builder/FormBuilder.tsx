@@ -5,6 +5,7 @@ import type { Form, Question } from "@prisma/client";
 import { SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import QuestionCard from "@/components/form-builder/QuestionCard";
+import QuestionEditor from "@/components/form-builder/QuestionEditor";
 
 type FormWithQuestions = Form & {
   questions: Question[];
@@ -20,7 +21,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   const [description, setDescription] = useState(form.description ?? "");
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
-  const [isAddingQuestion, setIsAddingQuestion] = useState(false);
+  const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
   const router = useRouter();
 
   //For saving the edited form title and description
@@ -52,40 +53,6 @@ export default function FormBuilder({ form }: FormBuilderProps) {
     }
   }
 
-  //Adding questions
-  async function handleAddQuestion() {
-    setIsAddingQuestion(true);
-
-    try {
-      const response = await fetch(`/api/forms/${form.id}/questions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "Untitled Question",
-          type: "SHORT_TEXT",
-          required: false,
-        }),
-      });
-
-      const data: {
-        message?: string;
-        error?: string;
-      } = await response.json();
-
-      if (!response.ok) {
-        console.error(data.error ?? "Failed to add question");
-        return;
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.error("Add question error:", error);
-    } finally {
-      setIsAddingQuestion(false);
-    }
-  }
   return (
     <div className="space-y-6">
       {/* Form Information */}
@@ -187,21 +154,27 @@ export default function FormBuilder({ form }: FormBuilderProps) {
 
           <button
             type="button"
-            onClick={handleAddQuestion}
-            disabled={isAddingQuestion}
-            className="rounded-lg bg-pink-600  px-2 md:px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 "
+            onClick={() => setIsCreatingQuestion(true)}
+            className="rounded-lg bg-pink-600 px-2 md:px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95"
           >
-            {isAddingQuestion ? "Adding..." : "+ Add "}
+            + Add
           </button>
         </div>
 
         <div className="mt-6">
-          {form.questions.length === 0 ? (
+          {isCreatingQuestion && (
+            <QuestionEditor
+              formId={form.id}
+              onCancelAction={() => setIsCreatingQuestion(false)}
+            />
+          )}
+
+          {form.questions.length === 0 && !isCreatingQuestion ? (
             <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center">
               <p className="text-sm text-gray-500">No questions added yet.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="mt-4 space-y-4">
               {form.questions.map((question, index) => (
                 <QuestionCard
                   key={question.id}

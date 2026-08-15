@@ -1,42 +1,81 @@
 "use client";
 import { useState } from "react";
-import type { Question } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import QuestionTypeSelector from "./QuestionTypeSelector";
+import type { Question, QuestionType } from "@prisma/client";
 
-type QuestionEditorProps = {
-  question: Question;
-  onCancelAction: () => void;
-};
-
-const questionTypes = [
-  { value: "SHORT_TEXT", label: "Short Text" },
-  { value: "LONG_TEXT", label: "Long Text" },
-  { value: "MULTIPLE_CHOICE", label: "Multiple Choice" },
-  { value: "CHECKBOX", label: "Checkbox" },
-  { value: "DROPDOWN", label: "Dropdown" },
-  { value: "NUMBER", label: "Number" },
-  { value: "EMAIL", label: "Email" },
-  { value: "DATE", label: "Date" },
-] as const;
+type QuestionEditorProps =
+  | {
+      question: Question;
+      formId?: never;
+      onCancelAction: () => void;
+    }
+  | {
+      question?: never;
+      formId: string;
+      onCancelAction: () => void;
+    };
 
 export default function QuestionEditor({
   question,
+  formId,
   onCancelAction,
 }: QuestionEditorProps) {
-  const [title, setTitle] = useState(question.title);
-  const [type, setType] = useState(question.type);
-  const [required, setRequired] = useState(question.required);
+  const [title, setTitle] = useState(question?.title ?? "");
+  const [type, setType] = useState<QuestionType>(
+    question?.type ?? "SHORT_TEXT",
+  );
+  const [required, setRequired] = useState(question?.required ?? false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [options, setOptions] = useState<string[]>(() => {
+    if (Array.isArray(question?.options)) {
+      return question.options.filter(
+        (option): option is string => typeof option === "string",
+      );
+    }
+
+    return [];
+  });
+
+  function isOptionQuestion() {
+    return (
+      type === "MULTIPLE_CHOICE" || type === "CHECKBOX" || type === "DROPDOWN"
+    );
+  }
+
+  function handleAddOption() {
+    setOptions((current) => [...current, ""]);
+  }
+
+  function handleOptionChange(index: number, value: string) {
+    setOptions((current) =>
+      current.map((option, optionIndex) =>
+        optionIndex === index ? value : option,
+      ),
+    );
+  }
+
+  function handleDeleteOption(index: number) {
+    setOptions((current) =>
+      current.filter((_, optionIndex) => optionIndex !== index),
+    );
+  }
 
   async function handleSave() {
     setIsSaving(true);
     setError("");
 
     try {
-      const response = await fetch(`/api/questions/${question.id}`, {
-        method: "PATCH",
+      const isCreating = !question;
+
+      const url = isCreating
+        ? `/api/forms/${formId}/questions`
+        : `/api/questions/${question.id}`;
+
+      const response = await fetch(url, {
+        method: isCreating ? "POST" : "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,6 +83,11 @@ export default function QuestionEditor({
           title,
           type,
           required,
+          options: isOptionQuestion()
+            ? options
+                .map((option) => option.trim())
+                .filter((option) => option.length > 0)
+            : null,
         }),
       });
 
@@ -53,14 +97,19 @@ export default function QuestionEditor({
       } = await response.json();
 
       if (!response.ok) {
-        setError(data.error ?? "Failed to update question");
+        setError(
+          data.error ??
+            (isCreating
+              ? "Failed to create question"
+              : "Failed to update question"),
+        );
         return;
       }
 
       router.refresh();
       onCancelAction();
     } catch (error) {
-      console.error("Update question error:", error);
+      console.error("Question save error:", error);
       setError("Something went wrong");
     } finally {
       setIsSaving(false);
@@ -69,10 +118,10 @@ export default function QuestionEditor({
 
   return (
     <div className="rounded-xl border border-pink-200 bg-white p-5">
-      <div>
-        <label htmlFor={`question-${question.id}`}>Question</label>
+      <div className="py-2">
+        <label htmlFor={`question-${question?.id ?? "new"}`}>Question</label>
         <input
-          id={`question-${question.id}`}
+          id={`question-${question?.id ?? "new"}`}
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -80,23 +129,55 @@ export default function QuestionEditor({
           placeholder="Enter your question"
         />
 
-        <div>
-          <label htmlFor={`type-${question.id}`}>Type</label>
-          <select
-            id={`type-${question.id}`}
-            value={type}
-            onChange={(e) =>
-              setType(e.target.value as (typeof questionTypes)[number]["value"])
-            }
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-pink-600 focus:ring-2 focus:ring-pink-600/20"
-          >
-            {questionTypes.map((questionType) => (
-              <option key={questionType.value} value={questionType.value}>
-                {questionType.label}
-              </option>
-            ))}
-          </select>
+        <div className="py-2">
+          <QuestionTypeSelector value={type} onChangeAction={setType} />
         </div>
+
+        {isOptionQuestion() && (
+          <div className="mt-4 rounded-lg border border-gray-200 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Options</p>
+
+                <p className="text-xs text-gray-500">
+                  Add the choices users can select.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAddOption}
+                className="text-sm font-medium text-pink-600 hover:text-pink-700"
+              >
+                + Add Option
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {options.map((option, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={option}
+                    onChange={(event) =>
+                      handleOptionChange(index, event.target.value)
+                    }
+                    placeholder={`Option ${index + 1}`}
+                    className="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-pink-600 focus:ring-2 focus:ring-pink-600/20"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteOption(index)}
+                    className="rounded-lg border border-red-200 px-3 py-2 text-sm text-red-500 transition hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
           <div>
