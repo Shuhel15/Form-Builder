@@ -30,19 +30,13 @@ type RouteContext = {
   }>;
 };
 
-export async function POST(
-  request: Request,
-  { params }: RouteContext,
-) {
+export async function POST(request: Request, { params }: RouteContext) {
   try {
     // Authentication
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { formId } = await params;
@@ -77,17 +71,11 @@ export async function POST(
     });
 
     if (!form) {
-      return NextResponse.json(
-        { error: "Form not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Form not found" }, { status: 404 });
     }
 
     if (form.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Find next question order
@@ -103,9 +91,7 @@ export async function POST(
       },
     });
 
-    const nextOrder = lastQuestion
-      ? lastQuestion.order + 1
-      : 0;
+    const nextOrder = lastQuestion ? lastQuestion.order + 1 : 0;
 
     // Create question
     const question = await prisma.question.create({
@@ -115,7 +101,7 @@ export async function POST(
         type,
         required,
         order: nextOrder,
-            },
+      },
     });
 
     return NextResponse.json(
