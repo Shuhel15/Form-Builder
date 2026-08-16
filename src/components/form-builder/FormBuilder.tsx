@@ -141,9 +141,9 @@ export default function FormBuilder({ form }: FormBuilderProps) {
         </div>
       </div>
 
-      {/* Questions */}
+
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Questions</h2>
 
@@ -152,13 +152,23 @@ export default function FormBuilder({ form }: FormBuilderProps) {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsCreatingQuestion(true)}
-            className="rounded-lg bg-pink-600 px-2 md:px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95"
-          >
-            + Add
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => router.push(`/dashboard/forms/${form.id}/preview`)}
+              className="rounded-lg border border-pink-600 px-3 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
+            >
+              Preview
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCreatingQuestion(true)}
+              className="rounded-lg bg-pink-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95"
+            >
+              + Add
+            </button>
+          </div>
         </div>
 
         <div className="mt-6">

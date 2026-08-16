@@ -57,7 +57,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">0</h2>
           <Link
             href="/forms"
-            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5  text-pink-600 flex flex-row items-center justify-between gap-1 "
+            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5 border border-pink-400  text-pink-600 flex flex-row items-center justify-between gap-1 "
           >
             View Forms <ChevronRight size={16} className="group-hover:transition-transform group-hover:translate-x-1" />
           </Link>
@@ -68,7 +68,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">0</h2>
           <Link
             href="/forms"
-            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5  text-pink-600 flex flex-row items-center justify-between gap-1 "
+            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5  border border-pink-400 text-pink-600 flex flex-row items-center justify-between gap-1 "
           >
             View Responses <ChevronRight size={16} className="group-hover:transition-transform group-hover:translate-x-1" />
           </Link>
@@ -79,7 +79,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">0</h2>
           <Link
             href="/forms"
-            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5  text-pink-600 flex flex-row items-center justify-between gap-1 "
+            className="group mt-2 text-xs md:text-sm bg-pink-300/30 px-2 rounded-2xl py-0.5  border border-pink-400 text-pink-600 flex flex-row items-center justify-between gap-1 "
           >
             View Published <ChevronRight size={16} className="group-hover:transition-transform group-hover:translate-x-1" />
           </Link>
