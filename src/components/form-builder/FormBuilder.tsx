@@ -23,6 +23,8 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   const [error, setError] = useState("");
   const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
   const router = useRouter();
+  const [isPublishing, setIsPublishing] = useState(false);
+
 
   //For saving the edited form title and description
   async function handleSave() {
@@ -52,6 +54,36 @@ export default function FormBuilder({ form }: FormBuilderProps) {
       setIsSaving(false);
     }
   }
+
+  //For publishing the form
+  async function handlePublishToggle() {
+  setIsPublishing(true);
+
+  try {
+    const response = await fetch(`/api/forms/${form.id}/publish`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        published: !form.published,
+      }),
+    });
+
+    const data: { error?: string } = await response.json();
+
+    if (!response.ok) {
+      console.error(data.error ?? "Failed to update publish status");
+      return;
+    }
+
+    router.refresh();
+  } catch (error) {
+    console.error("Error updating publish status:", error);
+  } finally {
+    setIsPublishing(false);
+  }
+}
 
   return (
     <div className="space-y-6">
@@ -152,24 +184,44 @@ export default function FormBuilder({ form }: FormBuilderProps) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => router.push(`/dashboard/forms/${form.id}/preview`)}
-              className="rounded-lg border border-pink-600 px-3 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
-            >
-              Preview
-            </button>
+         <div className="flex items-center gap-2">
+  <button
+    type="button"
+    onClick={() =>
+      router.push(`/dashboard/forms/${form.id}/preview`)
+    }
+    className="rounded-lg border border-pink-600 px-3 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
+  >
+    Preview
+  </button>
 
-            <button
-              type="button"
-              onClick={() => setIsCreatingQuestion(true)}
-              className="rounded-lg bg-pink-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95"
-            >
-              + Add
-            </button>
-          </div>
-        </div>
+  <button
+    type="button"
+    onClick={handlePublishToggle}
+    disabled={isPublishing}
+    className="rounded-lg bg-pink-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    {isPublishing
+      ? form.published
+        ? "Unpublishing..."
+        : "Publishing..."
+      : form.published
+        ? "Unpublish"
+        : "Publish"}
+  </button>
+
+  {!form.published && (
+    <button
+      type="button"
+      onClick={() => setIsCreatingQuestion(true)}
+      className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95"
+    >
+      + Add
+    </button>
+  )}
+</div>
+
+  </div>
 
         <div className="mt-6">
           {isCreatingQuestion && (
