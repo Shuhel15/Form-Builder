@@ -26,10 +26,10 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   const [isPublishing, setIsPublishing] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  //For saving the edited form title and description
   async function handleSave() {
     setIsSaving(true);
     setError("");
+
     try {
       const response = await fetch(`/api/forms/${form.id}`, {
         method: "PATCH",
@@ -38,6 +38,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
         },
         body: JSON.stringify({ title, description }),
       });
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -55,7 +56,6 @@ export default function FormBuilder({ form }: FormBuilderProps) {
     }
   }
 
-  //For publishing the form
   async function handlePublishToggle() {
     setIsPublishing(true);
 
@@ -85,7 +85,6 @@ export default function FormBuilder({ form }: FormBuilderProps) {
     }
   }
 
-  //For copying the public link of the form
   async function handleCopyLink() {
     try {
       const publicUrl = `${window.location.origin}/forms/${form.id}`;
@@ -105,9 +104,9 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   return (
     <div className="space-y-6">
       {/* Form Information */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
             {isEditingInfo ? (
               <div className="space-y-4">
                 <div>
@@ -143,20 +142,22 @@ export default function FormBuilder({ form }: FormBuilderProps) {
                   />
                 </div>
 
-                <div className="flex gap-3">
+                {error && <p className="text-sm text-red-600">{error}</p>}
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                   <button
                     type="button"
                     onClick={() => setIsEditingInfo(false)}
-                    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 active:scale-95"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95 sm:w-auto"
                   >
                     Cancel
                   </button>
-                  {error && <p className="text-sm text-red-600">{error}</p>}
+
                   <button
                     type="button"
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="rounded-lg bg-pink-600 px-4 py-2 text-sm font-medium text-white hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50 active:scale-95"
+                    className="w-full rounded-lg bg-pink-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                   >
                     {isSaving ? "Saving..." : "Save Changes"}
                   </button>
@@ -164,12 +165,12 @@ export default function FormBuilder({ form }: FormBuilderProps) {
               </div>
             ) : (
               <>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="wrap-break-word text-xl font-bold text-gray-900 sm:text-2xl">
                   {form.title}
                 </h1>
 
                 {form.description && (
-                  <p className="mt-2 text-sm text-gray-500">
+                  <p className="mt-2 wrap-break-word text-sm text-gray-500">
                     {form.description}
                   </p>
                 )}
@@ -181,7 +182,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
             <button
               type="button"
               onClick={() => setIsEditingInfo(true)}
-              className="rounded-lg flex flex-row justify-center items-center gap-1 border border-pink-600 px-4 py-2 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
+              className="flex w-full shrink-0 items-center justify-center gap-1 rounded-lg border border-pink-600 px-4 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95 sm:w-auto"
             >
               Edit
               <SquarePen size={15} />
@@ -190,8 +191,9 @@ export default function FormBuilder({ form }: FormBuilderProps) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between gap-3">
+      {/* Questions */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Questions</h2>
 
@@ -200,7 +202,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-3 whitespace-nowrap  gap-2 sm:flex sm:flex-wrap sm:items-center">
             <button
               type="button"
               onClick={() => router.push(`/dashboard/forms/${form.id}/preview`)}
@@ -228,7 +230,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
               <button
                 type="button"
                 onClick={handleCopyLink}
-                className={`flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-sm font-medium transition active:scale-95 ${
+                className={`flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-sm font-medium transition active:scale-95 ${
                   isCopied
                     ? "border-green-500 text-green-600 hover:bg-green-50"
                     : "border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -251,7 +253,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-5 sm:mt-6">
           {isCreatingQuestion && (
             <QuestionEditor
               formId={form.id}
@@ -260,7 +262,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
           )}
 
           {form.questions.length === 0 && !isCreatingQuestion ? (
-            <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center">
+            <div className="rounded-xl border border-dashed border-gray-300 p-6 text-center sm:p-8">
               <p className="text-sm text-gray-500">No questions added yet.</p>
             </div>
           ) : (

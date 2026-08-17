@@ -66,7 +66,7 @@ export default async function Dashboard() {
 
         <Link
           href="/create"
-          className="rounded-lg bg-pink-600 px-2.5 py-1.5 text-white shadow-md shadow-pink-300/30 transition-all duration-300 hover:scale-105 hover:bg-pink-700 active:scale-95 md:px-5 md:py-3"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-pink-600 px-3 py-2 text-sm font-medium text-white shadow-md shadow-pink-300/30 transition-all duration-300 hover:scale-105 hover:bg-pink-700 active:scale-95 md:px-5 md:py-3 md:text-base"
         >
           + Create Form
         </Link>
@@ -80,7 +80,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">{totalForms}</h2>
 
           <Link
-            href="/forms"
+            href="/dashboard/forms"
             className="group mt-2 flex flex-row items-center justify-between gap-1 rounded-2xl border border-pink-400 bg-pink-300/30 px-2 py-0.5 text-xs text-pink-600 md:text-sm"
           >
             View Forms
@@ -184,7 +184,7 @@ export default async function Dashboard() {
       )}
 
       <Link
-        href="/forms"
+        href="/dashboard/forms"
         className="group flex flex-row items-center justify-center gap-2 mt-6 self-center rounded-lg border border-pink-600 px-5 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
       >
         View All Forms{" "}
