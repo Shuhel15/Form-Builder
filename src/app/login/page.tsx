@@ -54,27 +54,12 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
       <div
-        className="
-          w-full max-w-4xl
-          min-h-137.5
-          flex flex-col md:flex-row
-          bg-white
-          rounded-xl
-          shadow-lg
-          shadow-pink-300/30
-          overflow-hidden
+        className=" w-full max-w-4xl min-h-137.5 flex flex-col md:flex-row bg-white rounded-xl shadow-lg shadow-pink-300/30 overflow-hidden
         "
       >
         {/* Left Div */}
         <div
-          className="
-            hidden md:flex
-            md:w-[55%]
-            bg-white
-            text-black
-            flex-col
-            justify-center
-            px-12
+          className=" hidden md:flex md:w-[55%] bg-white text-black flex-col justify-center px-12
           "
         >
           <h1 className="text-4xl font-bold mb-4">
@@ -139,17 +124,7 @@ export default function Login() {
 
         {/* Right Div */}
         <div
-          className="
-            w-full md:w-[45%]
-            bg-black
-            text-white
-            flex flex-col
-            items-center
-            justify-center
-            px-6 py-10
-            sm:px-10
-            rounded-xl
-            md:rounded-l-none
+          className=" w-full md:w-[45%] bg-black text-white flex flex-col items-center justify-center px-6 py-10 sm:px-10 rounded-xl md:rounded-l-none
           "
         >
           <h1 className="text-xl sm:text-2xl font-semibold mb-2">
@@ -189,19 +164,7 @@ export default function Login() {
               placeholder="example@gmail.com"
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="
-                w-full
-                bg-zinc-950
-                text-white
-                placeholder:text-zinc-600
-                border border-zinc-800
-                rounded-md
-                p-2.5
-                mb-2
-                text-sm
-                outline-none
-                focus:border-pink-600
-                transition
+              className=" w-full bg-zinc-950 text-white placeholder:text-zinc-600 border border-zinc-800 rounded-md p-2.5 mb-2 text-sm outline-none focus:border-pink-600 transition
               "
             />
 
@@ -218,19 +181,7 @@ export default function Login() {
               placeholder="********"
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="
-                w-full
-                bg-zinc-950
-                text-white
-                placeholder:text-zinc-600
-                border border-zinc-800
-                rounded-md
-                p-2.5
-                mb-2
-                text-sm
-                outline-none
-                focus:border-pink-600
-                transition
+              className=" w-full bg-zinc-950 text-white placeholder:text-zinc-600 border border-zinc-800 rounded-md p-2.5 mb-2 text-sm outline-none focus:border-pink-600 transition
               "
             />
 
@@ -238,19 +189,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="
-                w-full
-                bg-pink-600
-                hover:bg-pink-700
-                disabled:opacity-60
-                disabled:cursor-not-allowed
-                font-semibold
-                text-white
-                rounded-md
-                p-2.5
-                mt-2
-                active:scale-95
-                transition-all
+              className=" w-full bg-pink-600 hover:bg-pink-700 disabled:opacity-60 disabled:cursor-not-allowed font-semibold text-white rounded-md p-2.5 mt-2 active:scale-95 transition-all
               "
             >
               {loading ? "Logging in..." : "Login"}

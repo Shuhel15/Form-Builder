@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Form, Question } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 type PublicFormProps = {
   form: Form & {
@@ -11,8 +12,17 @@ type PublicFormProps = {
 
 type AnswerValue = string | string[];
 
+type SubmitResponse = {
+  error?: string;
+  success?: boolean;
+};
+
 export default function PublicForm({ form }: PublicFormProps) {
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   function handleTextChange(questionId: string, value: string) {
     setAnswers((previous) => ({
@@ -28,7 +38,9 @@ export default function PublicForm({ form }: PublicFormProps) {
   ) {
     const currentValue = answers[questionId];
 
-    const currentAnswers = Array.isArray(currentValue) ? currentValue : [];
+    const currentAnswers = Array.isArray(currentValue)
+      ? currentValue
+      : [];
 
     const updatedAnswers = checked
       ? [...currentAnswers, option]
@@ -38,6 +50,42 @@ export default function PublicForm({ form }: PublicFormProps) {
       ...previous,
       [questionId]: updatedAnswers,
     }));
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError("");
+    setSuccess(false);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`/api/forms/${form.id}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          answers,
+        }),
+      });
+
+      const data: SubmitResponse = await response.json();
+
+      if (!response.ok) {
+        setError(data.error ?? "Failed to submit form");
+        return;
+      }
+
+      setSuccess(true);
+      setAnswers({});
+      router.push("/submited");
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function renderQuestion(question: Question) {
@@ -117,11 +165,15 @@ export default function PublicForm({ form }: PublicFormProps) {
                   name={question.id}
                   value={option}
                   checked={value === option}
-                  onChange={() => handleTextChange(question.id, option)}
+                  onChange={() =>
+                    handleTextChange(question.id, option)
+                  }
                   className="h-4 w-4 accent-pink-600"
                 />
 
-                <span className="text-sm text-gray-700">{option}</span>
+                <span className="text-sm text-gray-700">
+                  {option}
+                </span>
               </label>
             ))}
           </div>
@@ -131,7 +183,9 @@ export default function PublicForm({ form }: PublicFormProps) {
         return (
           <div className="space-y-3">
             {getOptions(question.options).map((option, index) => {
-              const selectedOptions = Array.isArray(value) ? value : [];
+              const selectedOptions = Array.isArray(value)
+                ? value
+                : [];
 
               return (
                 <label
@@ -152,7 +206,9 @@ export default function PublicForm({ form }: PublicFormProps) {
                     className="h-4 w-4 accent-pink-600"
                   />
 
-                  <span className="text-sm text-gray-700">{option}</span>
+                  <span className="text-sm text-gray-700">
+                    {option}
+                  </span>
                 </label>
               );
             })}
@@ -171,7 +227,10 @@ export default function PublicForm({ form }: PublicFormProps) {
             <option value="">Select an option</option>
 
             {getOptions(question.options).map((option, index) => (
-              <option key={`${question.id}-${option}-${index}`} value={option}>
+              <option
+                key={`${question.id}-${option}-${index}`}
+                value={option}
+              >
                 {option}
               </option>
             ))}
@@ -181,7 +240,10 @@ export default function PublicForm({ form }: PublicFormProps) {
   }
 
   return (
-    <form className="mt-8 space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-8 space-y-6"
+    >
       {form.questions.map((question) => (
         <div
           key={question.id}
@@ -190,18 +252,33 @@ export default function PublicForm({ form }: PublicFormProps) {
           <label className="mb-3 block text-sm font-medium text-gray-900">
             {question.title}
 
-            {question.required && <span className="ml-1 text-red-500">*</span>}
+            {question.required && (
+              <span className="ml-1 text-red-500">*</span>
+            )}
           </label>
 
           {renderQuestion(question)}
         </div>
       ))}
 
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600">
+          Your response has been submitted successfully.
+        </div>
+      )}
+
       <button
         type="submit"
-        className="w-full rounded-lg bg-pink-600 px-5 py-3 font-medium text-white transition hover:bg-pink-700 active:scale-[0.98]"
+        disabled={isSubmitting}
+        className="w-full rounded-lg bg-pink-600 px-5 py-3 font-medium text-white transition hover:bg-pink-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Submit
+        {isSubmitting ? "Submitting..." : "Submit"}
       </button>
     </form>
   );

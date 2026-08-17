@@ -22,6 +22,8 @@ const createQuestionSchema = z.object({
   ]),
 
   required: z.boolean().default(false),
+
+  options: z.array(z.string().trim().min(1)).optional(),
 });
 
 type RouteContext = {
@@ -57,7 +59,7 @@ export async function POST(request: Request, { params }: RouteContext) {
       );
     }
 
-    const { title, type, required } = result.data;
+    const { title, type, required, options } = result.data;
 
     // Check form + owner
     const form = await prisma.form.findUnique({
@@ -101,6 +103,7 @@ export async function POST(request: Request, { params }: RouteContext) {
         type,
         required,
         order: nextOrder,
+        ...(options && options.length > 0 ? { options } : {}),
       },
     });
 

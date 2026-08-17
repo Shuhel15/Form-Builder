@@ -87,7 +87,7 @@ export default function QuestionEditor({
             ? options
                 .map((option) => option.trim())
                 .filter((option) => option.length > 0)
-            : null,
+            : undefined,
         }),
       });
 

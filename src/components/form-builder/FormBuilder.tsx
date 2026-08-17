@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Form, Question } from "@prisma/client";
-import { SquarePen } from "lucide-react";
+import { Copy, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import QuestionCard from "@/components/form-builder/QuestionCard";
 import QuestionEditor from "@/components/form-builder/QuestionEditor";
@@ -24,7 +24,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
   const router = useRouter();
   const [isPublishing, setIsPublishing] = useState(false);
-
+  const [isCopied, setIsCopied] = useState(false);
 
   //For saving the edited form title and description
   async function handleSave() {
@@ -57,33 +57,50 @@ export default function FormBuilder({ form }: FormBuilderProps) {
 
   //For publishing the form
   async function handlePublishToggle() {
-  setIsPublishing(true);
+    setIsPublishing(true);
 
-  try {
-    const response = await fetch(`/api/forms/${form.id}/publish`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        published: !form.published,
-      }),
-    });
+    try {
+      const response = await fetch(`/api/forms/${form.id}/publish`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          published: !form.published,
+        }),
+      });
 
-    const data: { error?: string } = await response.json();
+      const data: { error?: string } = await response.json();
 
-    if (!response.ok) {
-      console.error(data.error ?? "Failed to update publish status");
-      return;
+      if (!response.ok) {
+        console.error(data.error ?? "Failed to update publish status");
+        return;
+      }
+
+      router.refresh();
+    } catch (error) {
+      console.error("Error updating publish status:", error);
+    } finally {
+      setIsPublishing(false);
     }
-
-    router.refresh();
-  } catch (error) {
-    console.error("Error updating publish status:", error);
-  } finally {
-    setIsPublishing(false);
   }
-}
+
+  //For copying the public link of the form
+  async function handleCopyLink() {
+    try {
+      const publicUrl = `${window.location.origin}/forms/${form.id}`;
+
+      await navigator.clipboard.writeText(publicUrl);
+
+      setIsCopied(true);
+
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy public link:", error);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -173,7 +190,6 @@ export default function FormBuilder({ form }: FormBuilderProps) {
         </div>
       </div>
 
-
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -184,44 +200,56 @@ export default function FormBuilder({ form }: FormBuilderProps) {
             </p>
           </div>
 
-         <div className="flex items-center gap-2">
-  <button
-    type="button"
-    onClick={() =>
-      router.push(`/dashboard/forms/${form.id}/preview`)
-    }
-    className="rounded-lg border border-pink-600 px-3 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
-  >
-    Preview
-  </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => router.push(`/dashboard/forms/${form.id}/preview`)}
+              className="rounded-lg border border-pink-600 px-3 py-2.5 text-sm font-medium text-pink-600 transition hover:bg-pink-50 active:scale-95"
+            >
+              Preview
+            </button>
 
-  <button
-    type="button"
-    onClick={handlePublishToggle}
-    disabled={isPublishing}
-    className="rounded-lg bg-pink-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    {isPublishing
-      ? form.published
-        ? "Unpublishing..."
-        : "Publishing..."
-      : form.published
-        ? "Unpublish"
-        : "Publish"}
-  </button>
+            <button
+              type="button"
+              onClick={handlePublishToggle}
+              disabled={isPublishing}
+              className="rounded-lg bg-pink-600 px-3 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isPublishing
+                ? form.published
+                  ? "Unpublishing..."
+                  : "Publishing..."
+                : form.published
+                  ? "Unpublish"
+                  : "Publish"}
+            </button>
 
-  {!form.published && (
-    <button
-      type="button"
-      onClick={() => setIsCreatingQuestion(true)}
-      className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95"
-    >
-      + Add
-    </button>
-  )}
-</div>
+            {form.published && (
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className={`flex items-center gap-1.5 rounded-lg border px-3 py-2.5 text-sm font-medium transition active:scale-95 ${
+                  isCopied
+                    ? "border-green-500 text-green-600 hover:bg-green-50"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <Copy size={15} />
+                {isCopied ? "Copied!" : "Copy Link"}
+              </button>
+            )}
 
-  </div>
+            {!form.published && (
+              <button
+                type="button"
+                onClick={() => setIsCreatingQuestion(true)}
+                className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95"
+              >
+                + Add
+              </button>
+            )}
+          </div>
+        </div>
 
         <div className="mt-6">
           {isCreatingQuestion && (
