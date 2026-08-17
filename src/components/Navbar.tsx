@@ -34,7 +34,16 @@ export default async function Navbar() {
             How to use
           </Link>
 
-          {session?.user ? (
+          {session?.user && (
+            <Link
+              href="/dashboard"
+              className="rounded-sm px-2 py-0.5 text-zinc-500 transition-all duration-200 hover:scale-105 hover:bg-pink-200 hover:text-black"
+            >
+              Dashboard
+            </Link>
+          )}
+
+           {session?.user ? (
             <form
               action={async () => {
                 "use server";
@@ -44,7 +53,7 @@ export default async function Navbar() {
             >
               <button
                 type="submit"
-                className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
+                className="flex flex-row items-center justify-center gap-2 rounded-lg bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
               >
                 Logout
                 <LogOut size={16} />
@@ -53,19 +62,10 @@ export default async function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="flex flex-row items-center justify-center gap-2 rounded-sm bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
+              className="flex flex-row items-center justify-center gap-2 rounded-lg bg-pink-600 px-2 py-0.5 text-white shadow-md shadow-pink-500/50 transition-all duration-200 hover:scale-105 hover:bg-pink-700 "
             >
               Login
               <LogIn size={16} />
-            </Link>
-          )}
-
-          {session?.user && (
-            <Link
-              href="/dashboard"
-              className="rounded-sm px-2 py-0.5 text-zinc-500 transition-all duration-200 hover:scale-105 hover:bg-pink-200 hover:text-black"
-            >
-              Dashboard
             </Link>
           )}
         </div>

@@ -1,4 +1,4 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { z } from "zod";
@@ -22,21 +22,31 @@ type RouteContext = {
     formId: string;
   }>;
 };
-export async function PATCH( request: Request, { params }: RouteContext) {
-  try{
+
+export async function PATCH(
+  request: Request,
+  { params }: RouteContext,
+) {
+  try {
     const session = await auth();
-    if(!session?.user?.id){
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      );
     }
 
     const { formId } = await params;
-    const body:unknown = await request.json();
+
+    const body: unknown = await request.json();
+
     const result = updateFormSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json(
         {
-          error: "Invalid question data",
+          error: "Invalid form data",
           details: result.error.flatten(),
         },
         { status: 400 },
@@ -46,44 +56,113 @@ export async function PATCH( request: Request, { params }: RouteContext) {
     const { title, description } = result.data;
 
     const form = await prisma.form.findUnique({
-      where:{
+      where: {
         id: formId,
-      }, select:{
-        id:true,
-        userId:true,
-      }
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    });
 
-    })
-    if(!form){
-      return NextResponse.json({ error: "Form not found" }, { status: 404 });
+    if (!form) {
+      return NextResponse.json(
+        { error: "Form not found" },
+        { status: 404 },
+      );
     }
 
-    if(form.userId !== session.user.id){
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (form.userId !== session.user.id) {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 },
+      );
     }
 
     const updatedForm = await prisma.form.update({
-      where:{
+      where: {
         id: formId,
       },
-      data:{
+      data: {
         title,
         description: description || null,
       },
-      select:{
-        id:true,
-        title:true,
-        description:true,
-      }
-    })
+      select: {
+        id: true,
+        title: true,
+        description: true,
+      },
+    });
 
     return NextResponse.json({
       message: "Form updated successfully",
       form: updatedForm,
-    })
-
-  }catch(error){
+    });
+  } catch (error) {
     console.error("Error updating form:", error);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: RouteContext,
+) {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
+
+    const { formId } = await params;
+
+    const form = await prisma.form.findUnique({
+      where: {
+        id: formId,
+      },
+      select: {
+        id: true,
+        userId: true,
+      },
+    });
+
+    if (!form) {
+      return NextResponse.json(
+        { error: "Form not found" },
+        { status: 404 },
+      );
+    }
+
+    if (form.userId !== session.user.id) {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 },
+      );
+    }
+
+    await prisma.form.delete({
+      where: {
+        id: formId,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Form deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting form:", error);
+
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 },
+    );
   }
 }
