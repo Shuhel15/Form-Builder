@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { Heart } from "lucide-react";
+import FadeIn from "../animations/FadeIn";
 
 export default async function Footer() {
   const session = await auth();
 
   return (
+    <FadeIn>
     <footer className="mt-20 w-full border-t border-pink-300 py-8">
       
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4">
@@ -96,5 +98,6 @@ export default async function Footer() {
         </p>
       </div>
     </footer>
+    </FadeIn>
   );
 }

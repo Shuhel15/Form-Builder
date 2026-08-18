@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import QuestionTypeSelector from "./QuestionTypeSelector";
 import type { Question, QuestionType } from "@prisma/client";
+import FadeIn from "../animations/FadeIn";
 
 type QuestionEditorProps =
   | {
@@ -117,6 +118,7 @@ export default function QuestionEditor({
   }
 
   return (
+    <FadeIn>
     <div className="rounded-xl border border-pink-200 bg-white p-5">
       <div className="py-2">
         <label htmlFor={`question-${question?.id ?? "new"}`}>Question</label>
@@ -224,5 +226,6 @@ export default function QuestionEditor({
         </div>
       </div>
     </div>
+    </FadeIn>
   );
 }

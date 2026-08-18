@@ -2,12 +2,15 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { LogIn, LogOut } from "lucide-react";
 import MobileMenu from "@/components/Home/MobileMenu";
+import FadeIn from "../animations/FadeIn";
 
 export default async function Navbar() {
   const session = await auth();
 
   return (
+   
     <nav className="sticky top-0 z-50 w-full bg-white/50 backdrop-blur-md shadow-lg shadow-pink-300/30">
+       <FadeIn>
       <div className="relative mx-auto flex h-15 w-full max-w-6xl items-center justify-between px-4">
         
         {/* Logo */}
@@ -73,6 +76,8 @@ export default async function Navbar() {
         {/* Mobile Hamburger */}
         <MobileMenu isLoggedIn={!!session?.user} />
       </div>
+       </FadeIn>
     </nav>
+    
   );
 }

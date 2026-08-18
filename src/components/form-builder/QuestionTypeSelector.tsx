@@ -1,6 +1,7 @@
 "use client";
 
 import type { QuestionType } from "@prisma/client";
+import FadeIn from "../animations/FadeIn";
 
 type QuestionTypeSelectorProps = {
   value: QuestionType;
@@ -50,6 +51,7 @@ export default function QuestionTypeSelector({
   onChangeAction,
 }: QuestionTypeSelectorProps) {
   return (
+    <FadeIn>
     <div>
       <label
         htmlFor="question-type"
@@ -76,5 +78,6 @@ export default function QuestionTypeSelector({
         ))}
       </select>
     </div>
+    </FadeIn>
   );
 }

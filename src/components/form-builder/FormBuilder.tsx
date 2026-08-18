@@ -6,6 +6,7 @@ import { Copy, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import QuestionCard from "@/components/form-builder/QuestionCard";
 import QuestionEditor from "@/components/form-builder/QuestionEditor";
+import FadeIn from "../animations/FadeIn";
 
 type FormWithQuestions = Form & {
   questions: Question[];
@@ -102,6 +103,7 @@ export default function FormBuilder({ form }: FormBuilderProps) {
   }
 
   return (
+    <FadeIn>
     <div className="space-y-6">
       {/* Form Information */}
       <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
@@ -279,5 +281,6 @@ export default function FormBuilder({ form }: FormBuilderProps) {
         </div>
       </div>
     </div>
+    </FadeIn>
   );
 }

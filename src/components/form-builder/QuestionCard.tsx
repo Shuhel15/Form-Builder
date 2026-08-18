@@ -5,6 +5,7 @@ import type { Question } from "@prisma/client";
 import { useState } from "react";
 import QuestionEditor from "./QuestionEditor";
 import { useRouter } from "next/navigation";
+import FadeIn from "../animations/FadeIn";
 
 
 type QuestionCardProps = {
@@ -59,6 +60,7 @@ export default function QuestionCard({ question, index }: QuestionCardProps) {
     }
   }
   return (
+    <FadeIn>
     <div className="rounded-xl border border-gray-200 bg-white p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
@@ -109,5 +111,7 @@ export default function QuestionCard({ question, index }: QuestionCardProps) {
         </div>
       </div>
     </div>
+    </FadeIn>
+    
   );
 }

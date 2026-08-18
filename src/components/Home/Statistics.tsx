@@ -1,3 +1,5 @@
+import FadeIn from "../animations/FadeIn";
+
 export default function Statistics() {
   const statistics = [
     {
@@ -18,6 +20,7 @@ export default function Statistics() {
     },
   ];
   return (
+    <FadeIn>
     <section
       id="statistics"
       className="relative mt-30 flex flex-col items-center justify-center gap-4 px-4 md:px-6"
@@ -45,5 +48,6 @@ export default function Statistics() {
         ))}
       </div>
     </section>
+    </FadeIn>
   );
 }

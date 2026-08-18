@@ -4,6 +4,7 @@ import {
   SquareStack,
   TimerReset,
 } from "lucide-react";
+import FadeIn from "../animations/FadeIn";
 
 export default function Features() {
   const features = [
@@ -33,6 +34,7 @@ export default function Features() {
     },
   ];
   return (
+    <FadeIn>
     <section
       id="features"
       className="relative mt-30 flex w-full flex-col items-center justify-center gap-4 px-4 md:px-6"
@@ -71,5 +73,6 @@ export default function Features() {
         ))}
       </div>
     </section>
+    </FadeIn>
   );
 }

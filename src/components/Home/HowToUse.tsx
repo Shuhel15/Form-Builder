@@ -1,4 +1,5 @@
 import { BookText, ChartNoAxesCombined, CopyPlus, Share2 } from "lucide-react";
+import FadeIn from "../animations/FadeIn";
 
 export default function HowToUse() {
   const steps = [
@@ -24,6 +25,7 @@ export default function HowToUse() {
     },
   ];
   return (
+    <FadeIn>
     <section
       id="how-to-use"
       className=" relative mt-30 flex flex-col items-center justify-center gap-4 px-4 md:px-6"
@@ -57,5 +59,6 @@ export default function HowToUse() {
         ))}
       </div>
     </section>
+    </FadeIn>
   );
 }

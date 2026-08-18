@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import FadeIn from "../animations/FadeIn";
 
 type FormActionsProps = {
   formId: string;
@@ -100,6 +101,7 @@ export default function FormActions({
   }
 
   return (
+    <FadeIn>
     <div ref={menuRef} className="relative">
       <button
         type="button"
@@ -171,5 +173,6 @@ export default function FormActions({
         </div>
       )}
     </div>
+    </FadeIn>
   );
 }

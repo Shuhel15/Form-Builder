@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Form, Question } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import FadeIn from "../animations/FadeIn";
 
 type PublicFormProps = {
   form: Form & {
@@ -217,6 +218,7 @@ export default function PublicForm({ form }: PublicFormProps) {
 
       case "DROPDOWN":
         return (
+          
           <select
             value={typeof value === "string" ? value : ""}
             onChange={(event) =>
@@ -240,6 +242,7 @@ export default function PublicForm({ form }: PublicFormProps) {
   }
 
   return (
+    <FadeIn>
     <form
       onSubmit={handleSubmit}
       className="mt-8 space-y-6"
@@ -281,6 +284,7 @@ export default function PublicForm({ form }: PublicFormProps) {
         {isSubmitting ? "Submitting..." : "Submit"}
       </button>
     </form>
+    </FadeIn>
   );
 }
 

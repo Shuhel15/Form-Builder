@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import FadeIn from "@/components/animations/FadeIn";
 
 export default function CreateFormPage() {
   const router = useRouter();
@@ -44,6 +45,7 @@ export default function CreateFormPage() {
   }
 
   return (
+    <FadeIn>
     <div className="mx-auto mt-10 w-full max-w-2xl">
       <h1 className="text-3xl font-bold">Create Form</h1>
 
@@ -96,5 +98,6 @@ export default function CreateFormPage() {
         </button>
       </form>
     </div>
+    </FadeIn>
   );
 }

@@ -2,6 +2,7 @@
 
 import type { Form, Question, QuestionType } from "@prisma/client";
 import { useState } from "react";
+import FadeIn from "../animations/FadeIn";
 
 type FormWithQuestions = Form & {
   questions: Question[];
@@ -163,6 +164,7 @@ export default function FormPreview({ form }: FormPreviewProps) {
   }
 
   return (
+    <FadeIn>
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Form Header */}
       <div className="rounded-2xl border border-gray-200 border-t-4 border-t-pink-600 bg-white p-6 shadow-sm sm:p-8">
@@ -213,5 +215,6 @@ export default function FormPreview({ form }: FormPreviewProps) {
         )}
       </div>
     </form>
+    </FadeIn>
   );
 }
