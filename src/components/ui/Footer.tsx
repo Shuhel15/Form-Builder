@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { auth } from "../lib/auth";
+import { auth } from "@/lib/auth";
 import { Heart } from "lucide-react";
 
 export default async function Footer() {
@@ -7,6 +7,7 @@ export default async function Footer() {
 
   return (
     <footer className="mt-20 w-full border-t border-pink-300 py-8">
+      
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4">
 
         {/* Top Row - Logo & Navigation */}
@@ -19,6 +20,7 @@ export default async function Footer() {
 
           {/* Navigation */}
           <nav>
+            
             <ul className="group flex flex-col items-center gap-4 text-sm text-gray-600 md:flex-row">
               <li>
                 <Link

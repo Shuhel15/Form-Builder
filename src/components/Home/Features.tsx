@@ -35,16 +35,17 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="relative mt-30 flex w-full flex-col items-center justify-center gap-4"
+      className="relative mt-30 flex w-full flex-col items-center justify-center gap-4 px-4 md:px-6"
     >
-      <div className="pointer-events-none absolute left-60  top-250 h-40 w-40 rounded-full bg-pink-400/30 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-200 h-40 w-40 rounded-full bg-pink-400/30 blur-3xl md:right-60" />{" "}
+      <div className="pointer-events-none absolute left-50 md:top-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-pink-400/30 blur-3xl" />
+
+      <div className="pointer-events-none absolute md:right-50 md:top-1/5 h-32 w-32 translate-x-1/2 rounded-full bg-pink-400/30 blur-3xl" />
       <div className="flex relative z-10 flex-col items-center justify-center gap-2">
         <p className="text-lg text-pink-600 font-semibold border-b border-pink-600">
-          FATURES
+          FEATURES
         </p>
         <h1 className="text-5xl text-black font-extrabold text-center">
-          Why choose form builder?
+         Features of form builder ?
         </h1>
       </div>
       <div className="mt-10 grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">

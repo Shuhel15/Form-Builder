@@ -9,15 +9,14 @@ const playfair = Playfair_Display({
   style: ["italic"],
 });
 
-export default async function Home() {
+export default async function Hero() {
   const session = await auth();
 
   return (
     <div className="relative mt-20 grid grid-cols-1 items-center gap-4 md:grid-cols-2">
-      <div className="pointer-events-none absolute left-60  top-40 h-40 w-40 rounded-full bg-pink-400/30 blur-3xl" />
-
+<div className="pointer-events-none absolute left-30 top-20 h-32 w-32 -translate-x-1/2 rounded-full bg-pink-400/50 blur-3xl md:left-40 md:top-40" />
       <div className="relative z-10">
-        <h1 className=" text-4xl md:text-7xl font-extrabold">
+        <h1 className=" text-5xl md:text-7xl font-extrabold">
           Build Forms.
           <br />
           <span
@@ -56,17 +55,17 @@ export default async function Home() {
             <MoveRight className="group-hover:transition-transform group-hover:translate-x-1 " />
           </Link>
 
-          <button
+          <Link
+          href={"#why"}
             className="mt-6 ml-4 rounded-lg border border-pink-600 px-6 py-3 text-lg font-semibold text-pink-600 transition-all duration-300 hover:bg-pink-50
           hover:shadow-xl hover:shadow-pink-300 active:scale-95 hover:scale-105"
           >
             Learn More
-          </button>
+          </Link>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute -right-10  top-70 h-40 w-40 rounded-full bg-pink-400/30 blur-3xl" />
-      <div className="relative z-10 mt-30 md:mt-0 flex items-center justify-center">
+<div className="pointer-events-none absolute md:right-50 right-30 top-2/3 h-32 w-32 translate-x-1/2 rounded-full bg-pink-400/50 blur-3xl" />      <div className="relative z-10 mt-30 md:mt-0 flex items-center justify-center">
         <Image
           src="/hero1.png"
           alt="hero"

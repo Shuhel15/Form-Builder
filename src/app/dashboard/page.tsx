@@ -97,7 +97,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">{totalResponses}</h2>
 
           <Link
-            href="/forms"
+            href="/dashboard/forms?filter=responses"
             className="group mt-2 flex flex-row items-center justify-between gap-1 rounded-2xl border border-pink-400 bg-pink-300/30 px-2 py-0.5 text-xs text-pink-600 md:text-sm"
           >
             View Responses
@@ -114,7 +114,7 @@ export default async function Dashboard() {
           <h2 className="mt-2 text-3xl font-bold">{publishedForms}</h2>
 
           <Link
-            href="/forms"
+            href="/dashboard/forms?filter=published"
             className="group mt-2 flex flex-row items-center justify-between gap-1 rounded-2xl border border-pink-400 bg-pink-300/30 px-2 py-0.5 text-xs text-pink-600 md:text-sm"
           >
             View Published

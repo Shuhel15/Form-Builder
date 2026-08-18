@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { auth } from "../lib/auth";
+import { auth } from "@/lib/auth";
 import { LogIn, LogOut } from "lucide-react";
-import MobileMenu from "../components/Home/MobileMenu";
+import MobileMenu from "@/components/Home/MobileMenu";
 
 export default async function Navbar() {
   const session = await auth();
@@ -47,7 +47,7 @@ export default async function Navbar() {
             <form
               action={async () => {
                 "use server";
-                const { signOut } = await import("../lib/auth");
+                const { signOut } = await import("@/lib/auth");
                 await signOut();
               }}
             >

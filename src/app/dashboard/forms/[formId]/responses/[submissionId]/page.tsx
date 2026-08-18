@@ -69,7 +69,7 @@ export default async function IndividualResponsePage({
         </p>
       </div>
 
-      {/* Questions & Answers */}
+      {/* Ques and ans */}
       <div className="space-y-5">
         {form.questions.map((question, index) => {
           const answer = answers[question.id];
