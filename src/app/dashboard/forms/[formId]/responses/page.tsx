@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import ResponseExportButtons from "@/components/form-builder/ResponseExportButtons";
 
 type ResponsesPageProps = {
   params: Promise<{
@@ -49,12 +50,19 @@ export default async function ResponsesPage({ params }: ResponsesPageProps) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{form.title}</h1>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">{form.title}</h1>
 
-        {form.description && (
-          <p className="mt-2 text-gray-600">{form.description}</p>
-        )}
+          {form.description && (
+            <p className="mt-2 text-gray-600">{form.description}</p>
+          )}
+        </div>
+
+        <ResponseExportButtons
+          formId={formId}
+          disabled={form.submissions.length === 0}
+        />
       </div>
 
       {/* Response Summary */}

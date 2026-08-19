@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["pdfkit"],
+
+  allowedDevOrigins: ["10.29.124.236"],
 };
-module.exports = {
-  allowedDevOrigins: ['10.29.124.236'],
-}
 
 export default nextConfig;
