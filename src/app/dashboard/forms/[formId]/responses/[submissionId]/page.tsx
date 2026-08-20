@@ -15,7 +15,7 @@ export default async function IndividualResponsePage({
   const session = await auth();
 
   if (!session?.user?.id) {
-    return null;
+    notFound()
   }
 
   const { formId, submissionId } = await params;
@@ -38,9 +38,7 @@ export default async function IndividualResponsePage({
   }
 
   if (form.userId !== session.user.id) {
-    return new Response("Forbidden", {
-      status: 403,
-    });
+    notFound();
   }
 
   const submission = await prisma.submission.findFirst({

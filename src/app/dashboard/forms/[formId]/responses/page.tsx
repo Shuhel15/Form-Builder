@@ -14,7 +14,7 @@ export default async function ResponsesPage({ params }: ResponsesPageProps) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return null;
+    notFound();
   }
 
   const { formId } = await params;
@@ -42,9 +42,7 @@ export default async function ResponsesPage({ params }: ResponsesPageProps) {
   }
 
   if (form.userId !== session.user.id) {
-    return new Response("Forbidden", {
-      status: 403,
-    });
+    notFound();
   }
 
   return (
