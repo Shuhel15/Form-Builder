@@ -58,11 +58,12 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
-    return new Response(
-      JSON.stringify({
+    console.error("REGISTER_ERROR:", error);
+
+    return Response.json(
+      {
         message: "Internal Server Error",
-        error,
-      }),
+      },
       { status: 500 },
     );
   }
