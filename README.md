@@ -1,11 +1,12 @@
-# Form Builder SaaS
+# Form Builder
 
-A modern full-stack form builder SaaS inspired by Google Forms. Create forms, customize questions, publish forms publicly, collect responses, and export response data as Excel or PDF.
+A modern full-stack form builder inspired by Google Forms. Create forms, customize questions, publish forms publicly, collect responses, and export response data as Excel or PDF.
 
 ## 🚀 Features
 
 - 🔐 User authentication
-- 📝 Create, edit, and delete forms
+- 🔁 Reset password
+- �📝 Create, edit, and delete forms
 - 📄 Form title and description
 - ❓ Multiple question types
 - 🔀 Reorder questions
@@ -61,6 +62,7 @@ A modern full-stack form builder SaaS inspired by Google Forms. Create forms, cu
 - Auth.js / NextAuth
 - Prisma Adapter
 - Credentials Authentication
+- Reset password flow
 - Google OAuth
 
 ### Validation & Export
