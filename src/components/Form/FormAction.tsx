@@ -157,7 +157,7 @@ export default function FormActions({
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-zinc-100"
             >
               <Share2 size={16} />
-              {copied ? "Copied!" : "Share"}
+              {copied ? <p className="text-emerald-500">Copied!</p> : "Share"}
             </button>
           )}
 

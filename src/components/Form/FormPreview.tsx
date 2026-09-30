@@ -1,8 +1,8 @@
 "use client";
 
 import type { Form, Question, QuestionType } from "@prisma/client";
-import { useState } from "react";
 import FadeIn from "../animations/FadeIn";
+import toast from "react-hot-toast";
 
 type FormWithQuestions = Form & {
   questions: Question[];
@@ -23,7 +23,6 @@ function getOptions(options: Question["options"]): Options {
 }
 
 export default function FormPreview({ form }: FormPreviewProps) {
-  const [error, setError] = useState("");
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,9 +34,7 @@ export default function FormPreview({ form }: FormPreviewProps) {
       return;
     }
 
-    setError(
-      "Preview only — your response has not been submitted or saved."
-    );
+    toast.error("Preview only — your response has not been submitted or saved.");
   }
 
   function renderQuestion(question: Question) {
@@ -207,12 +204,6 @@ export default function FormPreview({ form }: FormPreviewProps) {
         >
           Submit
         </button>
-
-        {error && (
-          <p className="mt-3 text-sm text-pink-600">
-            {error}
-          </p>
-        )}
       </div>
     </form>
     </FadeIn>

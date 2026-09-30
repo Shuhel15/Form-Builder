@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Form, Question } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import FadeIn from "../animations/FadeIn";
+import toast from "react-hot-toast";
 
 type PublicFormProps = {
   form: Form & {
@@ -21,8 +22,6 @@ type SubmitResponse = {
 export default function PublicForm({ form }: PublicFormProps) {
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   function handleTextChange(questionId: string, value: string) {
@@ -56,8 +55,6 @@ export default function PublicForm({ form }: PublicFormProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setError("");
-    setSuccess(false);
     setIsSubmitting(true);
 
     try {
@@ -74,16 +71,16 @@ export default function PublicForm({ form }: PublicFormProps) {
       const data: SubmitResponse = await response.json();
 
       if (!response.ok) {
-        setError(data.error ?? "Failed to submit form");
+        toast.error(data.error || "Something went wrong. Please try again.");
         return;
       }
 
-      setSuccess(true);
+      toast.success("Form submitted successfully!");
       setAnswers({});
       router.push("/submited");
     } catch (error) {
       console.error("Form submission error:", error);
-      setError("Something went wrong. Please try again.");
+        toast.error("An unexpected error occurred. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -263,19 +260,6 @@ export default function PublicForm({ form }: PublicFormProps) {
           {renderQuestion(question)}
         </div>
       ))}
-
-      {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600">
-          Your response has been submitted successfully.
-        </div>
-      )}
-
       <button
         type="submit"
         disabled={isSubmitting}

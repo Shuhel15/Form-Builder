@@ -3,9 +3,18 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
 const registerSchema = z.object({
-  name: z.string().min(3, "Name is required"),
+  name: z
+    .string()
+    .min(3, "Name is required")
+    .regex(/^[A-Za-z\s]+$/, "Name should not contain numbers"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters long")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must include at least one special character",
+    ),
 });
 
 export async function POST(request: Request) {

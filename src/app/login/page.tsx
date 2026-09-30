@@ -5,21 +5,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Zap, Link, BarChart3 } from "lucide-react";
 import FadeIn from "@/components/animations/FadeIn";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
@@ -30,12 +26,12 @@ export default function Login() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        toast.error( "Invalid credentials. Please try again.");
         setLoading(false);
         return;
       }
 
-      setSuccess("Login successful!");
+      toast.success("Logged in successfully!");
 
       setTimeout(() => {
         router.push("/");
@@ -43,7 +39,7 @@ export default function Login() {
       }, 1000);
     } catch (error) {
       console.error("Error while logging in user:", error);
-      setError("An unexpected error occurred. Please try again later.");
+      toast.error("An unexpected error occurred. Please try again later.");
       setLoading(false);
     }
   };
@@ -51,8 +47,10 @@ export default function Login() {
   return (
     <FadeIn>
       <div className="min-h-screen flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-4xl flex flex-col md:flex-row min-h-0 md:min-h-137.5 bg-transparent md:bg-white rounded-none md:rounded-xl shadow-none 
-        md:shadow-lg md:shadow-pink-300/30 overflow-hidden">
+        <div
+          className="w-full max-w-4xl flex flex-col md:flex-row min-h-0 md:min-h-137.5 bg-transparent md:bg-white rounded-none md:rounded-xl shadow-none 
+        md:shadow-lg md:shadow-pink-300/30 overflow-hidden"
+        >
           {/* Left Div */}
           <div
             className=" hidden md:flex md:w-[55%] bg-white text-black flex-col justify-center px-12
@@ -130,17 +128,6 @@ export default function Login() {
             <p className="text-zinc-500 text-sm mb-6 text-center">
               Login to continue to your account.
             </p>
-
-            {error && (
-              <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-            )}
-
-            {success && (
-              <p className="text-green-500 text-sm mb-3 text-center">
-                {success}
-              </p>
-            )}
-
             <form
               onSubmit={handleSubmit}
               className="flex flex-col w-full max-w-sm gap-2"
@@ -178,6 +165,12 @@ export default function Login() {
                 className=" w-full bg-zinc-950 text-white placeholder:text-zinc-600 border border-zinc-800 rounded-md p-2.5 mb-2 text-sm outline-none focus:border-pink-600 transition
               "
               />
+              <a
+                href="/reset-password"
+                className="text-xs text-zinc-500 hover:text-pink-500 hover:underline"
+              >
+                Forgot Password?
+              </a>
 
               {/* Login Button */}
               <button

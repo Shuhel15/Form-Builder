@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -14,6 +15,29 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
 <html>
   <body className="min-h-screen w-full overflow-x-hidden bg-white">
+    <Toaster
+      position="top-center"
+      toastOptions={{
+        style: {
+          background: "#09090b",
+          color: "#fff",
+          border: "1px solid #27272a",
+          fontSize: "14px",
+        },
+        success: {
+          iconTheme: {
+            primary: "#db2777",
+            secondary: "#fff",
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: "#ef4444",
+            secondary: "#fff",
+          },
+        },
+      }}
+    />
     <Navbar />
 
     <main className="mx-auto w-full max-w-6xl px-4">
